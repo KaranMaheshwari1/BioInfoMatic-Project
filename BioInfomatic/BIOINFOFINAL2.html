@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioAlgos Pro - Parallel DNA Matcher</title>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            /* Professional Light Theme */
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --primary: #3b82f6;       /* Bright Blue */
+            --primary-dark: #1d4ed8;
+            --success: #10b981;       /* Emerald */
+            --warning: #f59e0b;       /* Amber */
+            --danger: #ef4444;        /* Red */
+            --text-main: #0f172a;     /* Slate 900 */
+            --text-muted: #64748b;    /* Slate 500 */
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #fff, #f0f9ff);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            border-radius: 12px;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #dbeafe;
+            color: var(--primary-dark);
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-weight: 600;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Controls Grid */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Increased min-width for better fit */
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* NEW: Responsive Input Group for Aligning Button + Input */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: stretch; /* Ensures button and input are exactly same height */
+            flex-wrap: wrap;      /* Allows button to drop to next line on mobile */
+        }
+
+        .input-group input, 
+        .input-group select {
+            flex: 1;              /* Take remaining width */
+            min-width: 150px;     /* Don't shrink too small */
+        }
+
+        .input-group button {
+            flex-shrink: 0;       /* Don't let button text wrap awkwardly */
+            min-width: 110px;     /* Consistent button width for alignment */
+            justify-content: center;
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            background-color: #fff;
+            border: 1px solid #cbd5e1;
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+        }
+        .btn-success:hover {
+            background-color: #059669;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            border: 1px solid #e2e8f0;
+        }
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        /* --- VISUALIZERS --- */
+
+        /* CPU Grid */
+        .cpu-viz-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        
+        .cpu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Wider for text */
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .cpu-core {
+            min-height: 90px;
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+            text-align: center;
+        }
+
+        .cpu-core .chunk-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 2px;
+            color: var(--text-main);
+        }
+
+        .cpu-core .chunk-data {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 4px;
+            width: 100%;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 4px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .cpu-core small {
+            font-size: 0.7rem;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+        }
+
+        .cpu-core .status-label {
+            font-weight: 600;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+
+        .cpu-core.active {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success);
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+            transform: translateY(-2px);
+        }
+        .cpu-core.active .chunk-title, 
+        .cpu-core.active small { color: white; }
+        .cpu-core.active .chunk-data { background: rgba(255,255,255,0.2); color: white; border-color: rgba(255,255,255,0.3); }
+        .cpu-core.active .status-label { color: var(--success); background: white; }
+
+        .cpu-core.finished {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .cpu-core.finished .chunk-title, 
+        .cpu-core.finished small { color: white; }
+        .cpu-core.finished .chunk-data { background: rgba(255,255,255,0.2); color: white; border-color: rgba(255,255,255,0.3); }
+        .cpu-core.finished .status-label { color: var(--primary); background: white; }
+
+
+        /* Dashboard Stats */
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label { 
+            font-size: 0.8rem; 
+            color: var(--text-muted); 
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .stat-value { 
+            font-size: 1.75rem; 
+            font-weight: 700; 
+            color: var(--text-main); 
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .winner-row {
+            background-color: #ecfdf5;
+        }
+        
+        .winner-badge {
+            background-color: var(--success);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .algo-type-badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+        .badge-seq { background: #f1f5f9; color: #64748b; }
+        .badge-par { background: #dbeafe; color: #1d4ed8; }
+
+        /* Charts */
+        .charts-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+        }
+        
+        @media (max-width: 900px) {
+            .charts-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            height: 350px;
+            position: relative;
+        }
+
+        /* Status Messages */
+        #statusMessage {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .status-visible { opacity: 1 !important; }
+        .status-success { background-color: #ecfdf5; color: #047857; border: 1px solid #d1fae5; }
+        .status-error { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
+        .status-loading { background-color: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+        .status-warning { background-color: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+            margin-right: 8px;
+            vertical-align: -0.125em; /* Better alignment with text */
+        }
+        
+        /* Full Page Loader Overlay */
+        .overlay-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+        .overlay-loader.active { display: flex; }
+        
+        .big-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- OVERLAY LOADER -->
+    <div id="pageLoader" class="overlay-loader">
+        <div class="big-spinner"></div>
+        <h2 id="loaderText" style="color:var(--text-main);">Processing...</h2>
+    </div>
+
+    <header>
+        <h1>BioAlgos Pro <span class="badge">Ultima Edition</span></h1>
+        <p class="subtitle">Complete Suite: Naive, KMP, Boyer-Moore & Suffix Tree</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- NEW: DATA CONSOLE CARD (Top Section) -->
+        <div class="card" style="border-left: 5px solid var(--primary);">
+            <div class="card-header">
+                <h2><span>🧬</span> Data Console</h2>
+            </div>
+            
+            <div class="controls-grid">
+                 <!-- Genome Generation -->
+                <div class="control-group">
+                    <label>1. Genome Data Size</label>
+                    <select id="genomeSize" style="width: 100%">
+                        <option value="1000000">1 Million Bases (Quick Test)</option>
+                        <option value="10000000" selected>10 Million Bases</option>
+                        <option value="20000000">20 Million Bases</option>
+                        <option value="30000000">30 Million Bases</option>
+                        <option value="40000000">40 Million Bases</option>
+                        <option value="50000000">50 Million Bases (Heavy)</option>
+                    </select>
+                    <small id="genomeStatus" style="color: var(--text-muted); margin-top:8px;">Status: No Data</small>
+                </div>
+
+                <!-- Pattern Input -->
+                <div class="control-group">
+                    <label>2. DNA Pattern to Search</label>
+                    <div class="input-group">
+                        <input type="text" id="patternInput" placeholder="e.g. AGCTTAG" value="AGCT"
+                               oninput="this.value = this.value.toUpperCase(); syncInputs('patternInput', 'execPatternInput')">
+                        <button class="btn-primary" onclick="generateGenome()">
+                             Generate DNA
+                        </button>
+                    </div>
+                    <small style="color: var(--text-muted); margin-top:8px;">Data Console Input (Synced).</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROL PANEL (Bottom Section) -->
+        <div class="card">
+            <div class="card-header">
+                <h2><span>⚙️</span> Execution Engine</h2>
+            </div>
+
+            <div class="controls-grid">
+                
+                <!-- NEW: Execution Pattern Input -->
+                <div class="control-group">
+                    <label>3. Active Search Pattern</label>
+                    <input type="text" id="execPatternInput" placeholder="e.g. AGCTTAG" value="AGCT" style="width: 100%"
+                           oninput="this.value = this.value.toUpperCase(); syncInputs('execPatternInput', 'patternInput')">
+                    <small style="color: var(--text-muted); margin-top:8px;">Pattern to find (Synced with Console).</small>
+                </div>
+
+                <!-- Chunk Selection -->
+                <div class="control-group">
+                    <label>4. Parallel Chunks (Threads)</label>
+                    <select id="chunkCount" style="width: 100%">
+                        <option value="2">2 Chunks</option>
+                        <option value="4" selected>4 Chunks</option>
+                        <option value="8">8 Chunks</option>
+                        <option value="12">12 Chunks</option>
+                        <option value="16">16 Chunks</option>
+                        <option value="32">32 Chunks (High Load)</option>
+                    </select>
+                    <small style="color: var(--text-muted); margin-top:8px;">Hardware Cores Detected: <span id="coreHint"></span></small>
+                </div>
+
+                <!-- SEQUENTIAL Search Selection -->
+                <div class="control-group">
+                    <label>5. Sequential Search</label>
+                    <div class="input-group">
+                        <select id="seqAlgoSelect">
+                            <option value="naive">Naive Search (Backend)</option>
+                            <option value="kmp">KMP Search (Backend)</option>
+                            <option value="bm">Boyer-Moore (Backend)</option>
+                            <option value="suffix">Suffix Array (Backend)</option>
+                        </select>
+                        <button class="btn-secondary" onclick="runSequential()">
+                            <span>🔎</span> Run Seq
+                        </button>
+                    </div>
+                    <small style="color: var(--text-muted); margin-top:8px;">Single-threaded execution.</small>
+                </div>
+
+                <!-- PARALLEL Search Selection -->
+                <div class="control-group">
+                    <label>6. Parallel Search</label>
+                    <div class="input-group">
+                        <select id="parAlgoSelect">
+                            <option value="naive">Naive Search (Backend)</option>
+                            <option value="kmp">KMP Search (Backend)</option>
+                            <option value="bm">Boyer-Moore (Backend)</option>
+                            <option value="suffix">Suffix Array (Backend)</option>
+                        </select>
+                        <button class="btn-success" onclick="runParallel()">
+                            <span>⚡</span> Run Par
+                        </button>
+                    </div>
+                    <small style="color: var(--text-muted); margin-top:8px;">Multi-threaded execution.</small>
+                </div>
+
+                <!-- COMPARE Selection -->
+                <div class="control-group">
+                    <label>7. Compare Modes (Seq vs Par)</label>
+                    <div class="input-group">
+                        <select id="compareAlgoSelect">
+                            <option value="naive">Naive Search (Backend)</option>
+                            <option value="kmp">KMP Search (Backend)</option>
+                            <option value="bm">Boyer-Moore (Backend)</option>
+                            <option value="suffix">Suffix Array (Backend)</option>
+                        </select>
+                        <button class="btn-primary" onclick="runSeqVsParComparison()">
+                            <span>⚖️</span> Compare
+                        </button>
+                    </div>
+                    <small style="color: var(--text-muted); margin-top:8px;">Run both modes & compare speedup.</small>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="clearResults()">
+                    Reset UI
+                </button>
+                <button class="btn-primary" onclick="runFullSuiteComparison()">
+                    <span>🚀</span> Run Full Suite Comparison (All Algos)
+                </button>
+            </div>
+            <div id="statusMessage"></div>
+        </div>
+
+        <!-- LIVE VISUALIZATION -->
+        <div class="card" id="visCard" style="display:none;">
+            <div class="card-header">
+                <h2><span>🧠</span> Real-Time Worker Status</h2>
+                <div style="font-size:0.9rem; color:var(--text-muted);">
+                    Active Workers: <strong id="activeWorkerCount">0</strong>
+                </div>
+            </div>
+            
+            <div class="cpu-viz-container">
+                <label>Processing Chunks (Data Ranges & Preview)</label>
+                <div class="cpu-grid" id="cpuGrid">
+                    <!-- Workers injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS DASHBOARD -->
+        <div class="card" id="dashboard" style="display:none;">
+            <div class="card-header">
+                <h2><span>📊</span> Performance Metrics</h2>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-panel">
+                <div class="stat-box">
+                    <div class="stat-label">Fastest Algorithm</div>
+                    <div class="stat-value" id="dispWinner" style="color: var(--success);">-</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Max Parallel Speedup</div>
+                    <div class="stat-value" id="dispSpeedup" style="color: var(--primary);">-</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Total Matches</div>
+                    <div class="stat-value" id="dispMatches">-</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Match Percentage</div>
+                    <div class="stat-value" id="dispPercentage">-</div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Mode</th>
+                            <th>Chunks</th>
+                            <th>Execution Time</th>
+                            <th>Matches</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        <!-- Rows injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-wrapper" id="chartsContainer">
+                <div class="chart-box">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <canvas id="speedupChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- WORKER SCRIPT (Inline - Keep for Fallback/Demo if needed) ---
+        const workerCode = `
+            self.onmessage = function(e) {
+                const { text, pattern, offset, id, algorithm } = e.data;
+                let matches = [];
+                const n = text.length;
+                const m = pattern.length;
+                // Naive implementation for fallback
+                for(let i = 0; i <= n - m; i++) {
+                    let j = 0;
+                    while(j < m && text[i+j] === pattern[j]) j++;
+                    if(j === m) matches.push(offset + i);
+                }
+                self.postMessage({ id, matches });
+            };
+        `;
+        const workerBlob = new Blob([workerCode], { type: "application/javascript" });
+        const workerUrl = URL.createObjectURL(workerBlob);
+
+        // --- GLOBAL STATE ---
+        let genomeData = "";
+        let chartInstanceBar = null;
+        let chartInstanceLine = null;
+        let chartInstancePie = null;
+        const logicalCores = navigator.hardwareConcurrency || 4;
+
+        // --- INIT ---
+        window.onload = function() {
+            document.getElementById('coreHint').textContent = logicalCores;
+            const chunkSelect = document.getElementById('chunkCount');
+            if ([2,4,8,12,16,32].includes(logicalCores)) {
+                chunkSelect.value = logicalCores;
+            }
+            generateGenome();
+        };
+
+        function showLoader(text) {
+            document.getElementById('loaderText').textContent = text;
+            document.getElementById('pageLoader').classList.add('active');
+        }
+
+        function hideLoader() {
+            document.getElementById('pageLoader').classList.remove('active');
+        }
+
+        function updateWorkerStatus(id, status) {
+            const core = document.getElementById(`worker-${id}`);
+            if(core) {
+                const label = core.querySelector('.status-label');
+                if(status === 'active') {
+                    core.classList.add('active');
+                    core.classList.remove('finished');
+                    if(label) label.textContent = 'Scanning...';
+                } else if(status === 'done') {
+                    core.classList.remove('active');
+                    core.classList.add('finished');
+                    if(label) label.textContent = 'Done';
+                }
+            }
+        }
+        
+        function syncInputs(srcId, destId) {
+            const val = document.getElementById(srcId).value;
+            const dest = document.getElementById(destId);
+            if (dest && dest.value !== val) {
+                dest.value = val;
+            }
+        }
+
+        // --- 1. DATA GENERATION ---
+        async function generateGenome() {
+            const sizeVal = document.getElementById('genomeSize').value;
+            const size = parseInt(sizeVal);
+            const pattern = document.getElementById('patternInput').value || "AGCT";
+            
+            showLoader("Generating Genome Data...");
+            setStatus("Initiating Backend Generation...", "loading");
+
+            // 1. Call Backend API
+            let backendSuccess = false;
+            try {
+                const response = await fetch(`http://localhost:8080/api/bioinfo/data/generate-file/${encodeURIComponent(pattern)}?size=${size}`, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+
+                if (response.ok) {
+                    const msg = await response.text();
+                    console.log("Backend Success:", msg);
+                    backendSuccess = true;
+                } else {
+                    console.warn("Backend Error:", response.status);
+                }
+            } catch (err) {
+                console.warn("Backend Unreachable:", err);
+            }
+
+            // 2. Generate Local Data (Simulation for Visualizer)
+            // This ensures UI works even if backend is slow/headless
+            setStatus("Generating local simulation...", "loading");
+            
+            setTimeout(() => {
+                const chars = "AGCT";
+                let result = "";
+                // Only generate local preview if size isn't too huge to prevent browser crash
+                // 50M might crash browser RAM, so limit preview
+                const limit = Math.min(size, 100000); 
+                for(let i=0; i<limit; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * 4));
+                }
+                
+                // Inject pattern
+                if (limit > 2000 && pattern.length > 0) {
+                    const pLen = pattern.length;
+                    const points = [1000, Math.floor(limit / 2), limit - pLen - 1000];
+                    const inject = (str, idx, val) => str.substring(0, idx) + val + str.substring(idx + val.length);
+                    points.forEach(p => {
+                        if(p >= 0 && p + pLen < limit) result = inject(result, p, pattern);
+                    });
+                }
+
+                genomeData = result; // Local preview data
+                const backendMsg = backendSuccess ? " + Backend File Saved (In-Memory)" : " (Local Only)";
+                document.getElementById('genomeStatus').textContent = `Status: Ready (${size.toLocaleString()} bases)${backendMsg}`;
+                setStatus(`Generation Complete${backendMsg}`, backendSuccess ? "success" : "warning");
+                hideLoader();
+            }, 50);
+        }
+
+        // --- 4. ORCHESTRATION ---
+        
+        async function runSequential() {
+            if(!validateRun()) return;
+            const algo = document.getElementById('seqAlgoSelect').value;
+            const pattern = document.getElementById('patternInput').value;
+
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('visCard').style.display = 'none';
+
+            let endpoint = "";
+            let algoName = "";
+
+            if (algo === 'naive') { endpoint = "naive-search"; algoName = "Naive Search"; }
+            else if (algo === 'kmp') { endpoint = "kmp-search"; algoName = "KMP Search"; }
+            else if (algo === 'bm') { endpoint = "bm-search"; algoName = "Boyer-Moore"; }
+            else if (algo === 'suffix') { endpoint = "suffix-search"; algoName = "Suffix Array"; }
+
+            setStatus(`Requesting Sequential ${algoName} from Backend...`, "loading");
+            
+            try {
+                const response = await fetch(`http://localhost:8080/api/bioinfo/Seqsearch/${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pattern: pattern })
+                });
+
+                if (!response.ok) throw new Error(`Server Error: ${response.status}`);
+
+                const data = await response.json();
+                
+                const result = {
+                    name: algoName,
+                    type: 'Sequential (Backend)',
+                    chunks: 1,
+                    time: data.executionTimeNs / 1_000_000, 
+                    matches: data.matchIndices || [], 
+                    note: 'Processed via Spring Boot API'
+                };
+                setStatus("Backend Search Complete", "success");
+                displaySingleResult(result);
+
+            } catch (err) {
+                console.error("Backend fetch failed:", err);
+                setStatus("Backend unavailable for this algo.", "error");
+            }
+        }
+
+        async function runParallel() {
+            if(!validateRun()) return;
+            const algoKey = document.getElementById('parAlgoSelect').value;
+            const numChunks = parseInt(document.getElementById('chunkCount').value);
+            const pattern = document.getElementById('patternInput').value;
+
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('visCard').style.display = 'none';
+
+            // Map frontend keys to backend expected "algorithm" string
+            let algoParam = "Naive";
+            let prettyName = "Naive Search";
+            if (algoKey === 'kmp') { algoParam = "KMP"; prettyName = "KMP Search"; }
+            else if (algoKey === 'bm') { algoParam = "BoyerMoore"; prettyName = "Boyer-Moore"; }
+            else if (algoKey === 'suffix') { algoParam = "Suffix"; prettyName = "Suffix Array"; }
+
+            setStatus(`Requesting Parallel ${prettyName} from Backend...`, "loading");
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/bioinfo/parallel/run-dynamic', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        pattern: pattern,
+                        numChunks: numChunks,
+                        algorithm: algoParam 
+                    })
+                });
+
+                if (!response.ok) throw new Error(`Server Error: ${response.status}`);
+
+                const data = await response.json();
+                
+                const result = {
+                    name: prettyName,
+                    type: 'Parallel (Backend)',
+                    chunks: numChunks,
+                    time: data.executionTimeNs / 1_000_000, 
+                    matches: data.matchIndices || [], 
+                    note: `Processed on Server (${data.availableCores || '?'} Cores)`
+                };
+                setStatus("Backend Search Complete", "success");
+                displaySingleResult(result);
+
+            } catch (err) {
+                console.error("Backend fetch failed:", err);
+                setStatus("Backend unavailable for this algo.", "error");
+            }
+        }
+
+        async function runSeqVsParComparison() {
+            if(!validateRun()) return;
+            const algoKey = document.getElementById('compareAlgoSelect').value;
+            const pattern = document.getElementById('patternInput').value;
+            const numChunks = parseInt(document.getElementById('chunkCount').value);
+
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('visCard').style.display = 'none'; 
+            
+            // Map keys
+            let seqEndpoint = "naive-search";
+            let parAlgoParam = "Naive";
+            let algoName = "Naive";
+
+            if (algoKey === 'kmp') { seqEndpoint = "kmp-search"; parAlgoParam = "KMP"; algoName = "KMP"; }
+            else if (algoKey === 'bm') { seqEndpoint = "bm-search"; parAlgoParam = "BoyerMoore"; algoName = "Boyer-Moore"; }
+            else if (algoKey === 'suffix') { seqEndpoint = "suffix-search"; parAlgoParam = "Suffix"; algoName = "Suffix Array"; }
+
+            setStatus(`Running Comparison for ${algoName}...`, "loading");
+
+            const results = [];
+
+            try {
+                // SEQUENTIAL RUN (Step 1)
+                setStatus(`Benchmarking ${algoName} (Sequential)...`, "loading");
+                const seqRes = await fetch(`http://localhost:8080/api/bioinfo/Seqsearch/${seqEndpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pattern: pattern })
+                }).then(r => r.ok ? r.json() : Promise.reject('Seq API Error'));
+
+                results.push({
+                    name: algoName,
+                    type: 'Sequential (Backend)',
+                    chunks: 1,
+                    time: seqRes.executionTimeNs / 1_000_000,
+                    matches: seqRes.matchIndices || []
+                });
+
+                // PARALLEL RUN (Step 2 - Only after Step 1 finishes)
+                setStatus(`Benchmarking ${algoName} (Parallel)...`, "loading");
+                const parRes = await fetch('http://localhost:8080/api/bioinfo/parallel/run-dynamic', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pattern: pattern, numChunks: numChunks, algorithm: parAlgoParam })
+                }).then(r => r.ok ? r.json() : Promise.reject('Par API Error'));
+
+                results.push({
+                    name: algoName,
+                    type: 'Parallel (Backend)',
+                    chunks: numChunks,
+                    time: parRes.executionTimeNs / 1_000_000,
+                    matches: parRes.matchIndices || [],
+                    note: `Cores: ${parRes.availableCores}`
+                });
+
+                setStatus("Comparison Complete (Backend)", "success");
+                displayCompareResults(results);
+
+            } catch (err) {
+                console.error(err);
+                setStatus("Backend unavailable for comparison.", "error");
+            }
+        }
+
+        async function runFullSuiteComparison() {
+            if(!validateRun()) return;
+            const pattern = document.getElementById('patternInput').value;
+            const numChunks = parseInt(document.getElementById('chunkCount').value);
+
+            document.getElementById('visCard').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            
+            // Define all algorithms to test
+            const algorithms = [
+                { key: 'naive', name: 'Naive', parParam: 'Naive', seqEndpoint: 'naive-search' },
+                { key: 'kmp', name: 'KMP', parParam: 'KMP', seqEndpoint: 'kmp-search' },
+                { key: 'bm', name: 'Boyer-Moore', parParam: 'BoyerMoore', seqEndpoint: 'bm-search' },
+                { key: 'suffix', name: 'Suffix Array', parParam: 'Suffix', seqEndpoint: 'suffix-search' }
+            ];
+
+            const results = [];
+
+            try {
+                // SEQUENTIAL EXECUTION LOOP (Stability Fix)
+                // We run them one by one to avoid CPU contention on the server
+                for (const algo of algorithms) {
+                    
+                    // 1. Sequential Run
+                    setStatus(`Benchmarking ${algo.name} (Sequential)...`, "loading");
+                    try {
+                        const seqRes = await fetch(`http://localhost:8080/api/bioinfo/Seqsearch/${algo.seqEndpoint}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ pattern: pattern })
+                        });
+                        
+                        if(seqRes.ok) {
+                            const data = await seqRes.json();
+                            results.push({
+                                name: algo.name,
+                                type: 'Sequential (Backend)',
+                                chunks: 1,
+                                time: data.executionTimeNs / 1_000_000,
+                                matches: data.matchIndices || []
+                            });
+                        } else { throw new Error('API Error'); }
+                    } catch (e) {
+                        console.warn("Skipping Seq " + algo.name);
+                    }
+
+                    // 2. Parallel Run
+                    setStatus(`Benchmarking ${algo.name} (Parallel)...`, "loading");
+                    try {
+                        const parRes = await fetch('http://localhost:8080/api/bioinfo/parallel/run-dynamic', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ pattern: pattern, numChunks: numChunks, algorithm: algo.parParam })
+                        });
+
+                        if(parRes.ok) {
+                            const data = await parRes.json();
+                            results.push({
+                                name: algo.name,
+                                type: 'Parallel (Backend)',
+                                chunks: numChunks,
+                                time: data.executionTimeNs / 1_000_000,
+                                matches: data.matchIndices || [],
+                                note: `Cores: ${data.availableCores}`
+                            });
+                        } else { throw new Error('API Error'); }
+                    } catch (e) {
+                       console.warn("Skipping Par " + algo.name);
+                    }
+                }
+
+                displayCompareResults(results);
+                setStatus("Full Suite Comparison Complete (Stable Run)", "success");
+
+            } catch (err) {
+                console.error("Suite Execution Failed", err);
+                setStatus("Error running full comparison suite.", "error");
+            }
+        }
+
+        function validateRun() {
+            // Check status instead of genomeData length because for >100k, genomeData is small preview
+            const statusText = document.getElementById('genomeStatus').textContent;
+            if(!statusText.includes("Ready")) { setStatus("Generate data first!", "error"); return false; }
+            const pattern = document.getElementById('patternInput').value;
+            if(!pattern) { setStatus("Enter a pattern!", "error"); return false; }
+            return true;
+        }
+
+        // --- 5. VISUALIZATION & UI ---
+        
+        function displaySingleResult(row) {
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('chartsContainer').style.display = 'none'; // Hide charts for single
+            
+            document.getElementById('dispWinner').innerHTML = `${row.name}`;
+            document.getElementById('dispSpeedup').innerHTML = `N/A <span style="font-size:0.5em">(Single Run)</span>`;
+            document.getElementById('dispMatches').textContent = row.matches.length.toLocaleString();
+            
+            // Percentage (Approximation for large files)
+            const patternLen = document.getElementById('patternInput').value.length;
+            // Note: We don't have total length from backend easily here unless we pass it, assuming standard size
+            document.getElementById('dispPercentage').textContent = "N/A";
+
+            const tbody = document.getElementById('resultsTableBody');
+            tbody.innerHTML = '';
+            
+            const tr = document.createElement('tr');
+            tr.className = 'winner-row';
+            const badgeClass = row.type.includes('Sequential') ? 'badge-seq' : 'badge-par';
+            
+            tr.innerHTML = `
+                <td>${row.name} <span class="winner-badge">RESULT</span></td>
+                <td><span class="algo-type-badge ${badgeClass}">${row.type}</span></td>
+                <td>${row.chunks}</td>
+                <td><strong>${row.time.toFixed(2)}</strong> ms</td>
+                <td>
+                    ${row.matches.length}
+                    ${row.note ? `<br><small style="color:var(--danger)">${row.note}</small>` : ''}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+        function displayCompareResults(data) {
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('chartsContainer').style.display = 'grid'; // Show charts
+            
+            // Metrics
+            const sorted = [...data].sort((a, b) => a.time - b.time);
+            const winner = sorted[0];
+            const matchesCount = data[0].matches.length;
+
+            document.getElementById('dispWinner').innerHTML = `${winner.name} (${winner.type}) <span style="font-size:0.6em">(${winner.time.toFixed(2)}ms)</span>`;
+            document.getElementById('dispMatches').textContent = matchesCount.toLocaleString();
+            document.getElementById('dispPercentage').textContent = "N/A";
+
+            // Dynamic Speedup Calculation
+            const algoName = winner.name;
+            const seqRun = data.find(d => d.type.includes('Sequential') && d.name === algoName);
+            const parRun = data.find(d => d.type.includes('Parallel') && d.name === algoName);
+            
+            if (seqRun && parRun) {
+                const speedup = seqRun.time / parRun.time;
+                document.getElementById('dispSpeedup').innerHTML = `${speedup.toFixed(2)}x <span style="font-size:0.5em; color:var(--text-muted)">(${algoName})</span>`;
+            } else {
+                document.getElementById('dispSpeedup').innerHTML = "N/A";
+            }
+
+            // Table
+            const tbody = document.getElementById('resultsTableBody');
+            tbody.innerHTML = '';
+            data.forEach(row => {
+                const isWinner = row === winner;
+                const tr = document.createElement('tr');
+                if(isWinner) tr.className = 'winner-row';
+                const badgeClass = row.type.includes('Sequential') ? 'badge-seq' : 'badge-par';
+                
+                tr.innerHTML = `
+                    <td>
+                        ${row.name} 
+                        ${isWinner ? '<span class="winner-badge">WINNER 🏆</span>' : ''}
+                    </td>
+                    <td><span class="algo-type-badge ${badgeClass}">${row.type}</span></td>
+                    <td>${row.chunks}</td>
+                    <td><strong>${row.time.toFixed(2)}</strong> ms</td>
+                    <td>${row.matches.length}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            renderCharts(data);
+        }
+
+        function renderCharts(data) {
+            const labels = [...new Set(data.map(d => d.name))];
+            
+            const seqTimes = labels.map(lbl => {
+                const item = data.find(d => d.type.includes('Sequential') && d.name === lbl);
+                return item ? item.time : 0;
+            });
+            
+            const parTimes = labels.map(lbl => {
+                const item = data.find(d => d.type.includes('Parallel') && d.name === lbl);
+                return item ? item.time : 0;
+            });
+
+            // --- Chart 1: Execution Time (Bar) with Insightful Tooltips ---
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            if(chartInstanceBar) chartInstanceBar.destroy();
+            
+            chartInstanceBar = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Sequential (ms)',
+                            data: seqTimes,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)', // Distinct Blue
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Parallel (ms)',
+                            data: parTimes,
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)', // Distinct Green
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        title: { display: true, text: 'Execution Time (Lower is Better)', font: { size: 14, weight: 'bold' } },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            padding: 12,
+                            callbacks: {
+                                footer: (tooltipItems) => {
+                                    // Custom calculation in tooltip
+                                    const seq = tooltipItems[0].raw;
+                                    const par = tooltipItems[1].raw;
+                                    if(seq && par) {
+                                        const diff = ((seq - par) / seq * 100).toFixed(1);
+                                        return diff > 0 
+                                            ? `🚀 Parallel is ${diff}% Faster` 
+                                            : `⚠️ Sequential is ${Math.abs(diff)}% Faster`;
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            title: { display: true, text: 'Time (ms)', font: { weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            // --- Chart 2: Speedup Factor (Efficiency) ---
+            const speedups = seqTimes.map((seq, i) => {
+                const par = parTimes[i];
+                return (par > 0 && seq > 0) ? (seq / par).toFixed(2) : 0;
+            });
+
+            const ctxLine = document.getElementById('speedupChart').getContext('2d');
+            if(chartInstanceLine) chartInstanceLine.destroy();
+
+            chartInstanceLine = new Chart(ctxLine, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Speedup Factor (Seq / Par)',
+                        data: speedups,
+                        // Dynamic coloring: Green for efficient (>1), Red for inefficient (<1)
+                        backgroundColor: speedups.map(s => s >= 1.0 ? 'rgba(16, 185, 129, 0.8)' : 'rgba(239, 68, 68, 0.8)'), 
+                        borderColor: speedups.map(s => s >= 1.0 ? '#059669' : '#b91c1c'),
+                        borderRadius: 4,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Parallel Efficiency ( > 1.0x is Good)', font: { size: 14, weight: 'bold' } },
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: c => `Speedup: ${c.raw}x` } }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: 'Factor (x)', font: { weight: 'bold' } },
+                            grid: { 
+                                // Highlight the 1.0 baseline
+                                color: c => c.tick.value === 1 ? '#334155' : '#e2e8f0', 
+                                lineWidth: c => c.tick.value === 1 ? 2 : 1 
+                            }
+                        }
+                    }
+                }
+            });
+
+            // --- Chart 3: Cost Distribution (Doughnut) ---
+            const ctxPie = document.getElementById('pieChart').getContext('2d');
+            if(chartInstancePie) chartInstancePie.destroy();
+
+            // Only relevant if we have comparison data
+            chartInstancePie = new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sequential Execution Time',
+                        data: seqTimes,
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)', // Blue
+                            'rgba(16, 185, 129, 0.8)', // Green
+                            'rgba(245, 158, 11, 0.8)', // Amber
+                            'rgba(239, 68, 68, 0.8)'   // Red
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Computational Cost Distribution', font: { size: 14, weight: 'bold' } },
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function setStatus(msg, type) {
+            const el = document.getElementById('statusMessage');
+            if (type === 'loading') {
+                el.innerHTML = `<span class="spinner"></span> ${msg}`;
+            } else {
+                el.textContent = msg;
+            }
+            el.className = `status-msg status-visible status-${type}`;
+        }
+        
+        function clearResults() {
+             document.getElementById('dashboard').style.display = 'none';
+             document.getElementById('visCard').style.display = 'none';
+             const grid = document.getElementById('cpuGrid');
+             grid.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
