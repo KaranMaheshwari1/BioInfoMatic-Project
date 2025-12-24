@@ -1,0 +1,43 @@
+package com.bio.algorithm;
+
+import com.bio.model.MatchResult;
+import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
+import org.biojava.nbio.alignment.template.SequenceMatcher;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class BioJavaSearch {
+
+    public MatchResult search(String text, String pattern) throws Exception {
+
+        AmbiguityDNACompoundSet compoundSet = AmbiguityDNACompoundSet.getDNACompoundSet();
+        DNASequence textSequence = new DNASequence(text, compoundSet);
+        DNASequence patternSequence = new DNASequence(pattern, compoundSet);
+
+        long startTime = System.nanoTime();
+
+        // ✅ Use BioJava 5.x SequenceMatcher API
+        SequenceMatcher<NucleotideCompound, DNASequence> matcher =
+                SequenceMatcher.getMatcher(textSequence, patternSequence);
+
+        // Get all match positions (1-based in BioJava)
+        List<Integer> matchIndices = matcher.getMatches()
+                .stream()
+                .map(m -> m.getQueryMatch().getIndex() - 1) // convert to 0-based if desired
+                .collect(Collectors.toList());
+
+        long endTime = System.nanoTime();
+        long executionTimeNs = endTime - startTime;
+
+        return new MatchResult(
+                "BioJava SequenceMatcher (5.4.0)",
+                executionTimeNs,
+                matchIndices,
+                text.length(),
+                pattern.length()
+        );
+    }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="com.bio.utils.GenomeDataGenerator"/>
+    <fullyQualifiedTypeName name="com.bio.service.ParallelGenericSearchService"/>
+    <fullyQualifiedTypeName name="com.bio.service.NaiveSearchService"/>
+    <fullyQualifiedTypeName name="com.bio.model.MatchResult"/>
+    <fullyQualifiedTypeName name="com.bio.model.MatchRequest"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.util.concurrent.Callable"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+</qualifiedTypeNameHistroy>

@@ -1,0 +1,37 @@
+// src/main/java/com/bio/service/NaiveSearchService.java
+
+package com.bio.service;
+
+import com.bio.model.MatchRequest;
+import com.bio.model.MatchResult;
+import com.bio.utils.GenomeDataGenerator; // Import the updated utility
+import com.bio.algorithm.NaiveSearch;
+import org.springframework.stereotype.Service;
+import java.io.IOException;
+import java.util.List;
+
+@Service
+public class NaiveSearchService {
+
+    // Removed GENOME_LENGTH constant (now handled by file content)
+    
+    // --- UPDATED METHOD FOR 10M SEQUENTIAL RUN ---
+    public MatchResult execute10MSearch(MatchRequest request) throws IOException { // Add throws IOException
+        
+        // 1. Read the Massive Genomic Data from the file
+        String text = GenomeDataGenerator.readGenomeFile();
+        String pattern = request.getPattern();
+
+        // 2. Execute the search and return the result
+        MatchResult result = new NaiveSearch().search(text, pattern);
+        
+        result.setAlgorithm("Naive Search (10M Bases - File)");
+        
+        return result;
+    }
+    
+    // ... (Your existing search(String text, String pattern) method remains the same)
+    // ... (Your existing search method should be renamed to something like searchChunk 
+    //      if it is used by the parallel service, to distinguish it from the
+    //      NaiveSearch algorithm class's search method.)
+}

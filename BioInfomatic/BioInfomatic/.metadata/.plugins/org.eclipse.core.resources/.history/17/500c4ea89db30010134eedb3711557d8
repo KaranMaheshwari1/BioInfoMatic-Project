@@ -1,0 +1,30 @@
+package com.bio.model;
+
+//src/main/java/com/bioinfo/model/MatchResult.java
+
+import java.util.List;
+
+public class MatchResult {
+ private String algorithm;
+ private long executionTimeNs; // Time in nanoseconds
+ private List<Integer> matchIndices; // List of start indices where the pattern is found
+ private int textLength;
+ private int patternLength;
+
+ // Constructors, Getters, and Setters for all fields
+ // ... (Omitted for brevity, but crucial in real code)
+ public MatchResult(String algorithm, long executionTimeNs, List<Integer> matchIndices, int textLength, int patternLength) {
+     this.algorithm = algorithm;
+     this.executionTimeNs = executionTimeNs;
+     this.matchIndices = matchIndices;
+     this.textLength = textLength;
+     this.patternLength = patternLength;
+ }
+
+ // Example Getter (All others needed for Spring serialization)
+ public long getExecutionTimeNs() { return executionTimeNs; }
+ public String getAlgorithm() { return algorithm; }
+ public List<Integer> getMatchIndices() { return matchIndices; }
+ public int getTextLength() { return textLength; }
+ public int getPatternLength() { return patternLength; }
+}

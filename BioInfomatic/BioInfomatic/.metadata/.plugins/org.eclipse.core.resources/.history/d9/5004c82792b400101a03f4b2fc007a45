@@ -1,0 +1,44 @@
+package com.bio.service;
+
+
+import com.bio.model.MatchRequest;
+import com.bio.model.MatchResult;
+import com.bio.utils.GenomeDataGenerator;
+import org.springframework.stereotype.Service;
+
+// Assuming this service dispatches to NaiveSearch, KMPSearch, etc.
+@Service
+public class SequentialGenericSearchServices { 
+    
+    // ENSURE THIS CONSTANT MATCHES THE ONE IN THE PARALLEL SERVICE
+    private static final int GENOME_LENGTH = 10_000_000; // 10 Million
+
+    // Assuming you have an execute method that takes the request
+    public MatchResult executeSearch(MatchRequest request) {
+        
+        // --- KEY MODIFICATION START ---
+        // 1. Generate the Massive Genomic Data at runtime
+        String pattern = request.getPattern();
+        // IGNORE request.getText() and use the generated 10M sequence
+        String text = GenomeDataGenerator.generateGenome(GENOME_LENGTH, pattern); 
+        int textLength = text.length();
+        int patternLength = pattern.length();
+        
+        // 2. Dispatch to the specific sequential algorithm (KMP, Naive, etc.)
+        // ... (Logic to select and run the requested algorithm on 'text' and 'pattern') ...
+        
+        // Example: If the requested algorithm is 'naive' (using your old NaiveSearch class):
+        // MatchResult result = new NaiveSearch().search(text, pattern);
+        
+        // Assuming the Dispatch logic and result construction is here...
+        MatchResult result = dispatchAlgorithm(request.getAlgorithm(), text, pattern);
+
+        // Update the metadata since the request body metadata is now wrong
+        result.setTextLength(textLength); 
+        result.setPatternLength(patternLength);
+        
+        return result;
+    }
+    
+    // ... other methods, like the dispatchAlgorithm implementation ...
+}

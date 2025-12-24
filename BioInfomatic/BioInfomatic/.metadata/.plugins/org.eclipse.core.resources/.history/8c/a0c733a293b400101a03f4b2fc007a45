@@ -1,0 +1,67 @@
+// src/main/java/com/example/bioinfo/service/NaiveSearchService.java
+
+package com.bio.service;
+
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
+import com.bio.model.MatchRequest;
+import com.bio.model.MatchResult;
+import com.bio.utils.GenomeDataGenerator; // Assuming correct import
+import com.bio.algorithm.NaiveSearch; // Assuming NaiveSearch class is used
+
+@Service
+public class NaiveSearchService {
+
+    // Must match the GENOME_LENGTH in ParallelGenericSearchService
+    private static final int GENOME_LENGTH = 10_000_000; 
+    
+    // --- NEW METHOD FOR 10M SEQUENTIAL RUN ---
+    public MatchResult execute10MSearch(MatchRequest request) {
+        // 1. Generate the Massive Genomic Data
+        String pattern = request.getPattern();
+        // Ignore request.getText() and use the generated 10M sequence
+        String text = GenomeDataGenerator.generateGenome(GENOME_LENGTH, pattern); 
+
+        // 2. Execute the search and return the result
+        // Use the NaiveSearch class to get a MatchResult (with timing/metadata)
+        MatchResult result = new NaiveSearch().search(text, pattern);
+        
+        // Ensure the algorithm name reflects the data set
+        result.setAlgorithm("Naive Search (10M Bases)");
+        
+        return result;
+    }
+
+    /**
+    * Finds all occurrences of the pattern in the text using the Naive algorithm.
+    * * @param text The genomic sequence (or a chunk thereof).
+    * @param pattern The pattern to search for.
+    * @return A list of starting indices (0-based) where the pattern is found.
+    */
+    // ... (Your existing search(String text, String pattern) method remains the same)
+    public List<Integer> search(String text, String pattern) {
+        // ... (existing implementation for thread-safe chunk search)
+        // Note: This method is used by the Parallel service.
+        List<Integer> matches = new ArrayList<>();
+        int N = text.length();
+        int M = pattern.length();
+
+        if (M == 0 || N < M) {
+            return matches;
+        }
+
+        for (int i = 0; i <= N - M; i++) {
+            int j;
+            for (j = 0; j < M; j++) {
+                if (text.charAt(i + j) != pattern.charAt(j)) {
+                    break;
+                }
+            }
+            if (j == M) {
+                matches.add(i);
+            }
+        }
+        return matches;
+    }
+}

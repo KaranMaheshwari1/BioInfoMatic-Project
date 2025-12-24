@@ -1,0 +1,41 @@
+package com.bio.controller;
+
+//src/main/java/com/bioinfo/controller/BioinformaticsController.java
+
+import org.springframework.web.bind.annotation.*;
+
+import com.bio.algorithm.NaiveSearch;
+import com.bio.model.MatchResult;
+
+import java.util.List;
+import java.util.ArrayList;
+
+@RestController
+@RequestMapping("/api/bioinfo")
+@CrossOrigin(origins = "*") // Allows Flutter/any frontend to access
+public class BioinformaticsController {
+
+ @PostMapping("/match/naive")
+ public MatchResult runNaiveSearch(@RequestBody SearchRequest request) {
+     // Simple error handling
+     if (request.getText() == null || request.getPattern() == null) {
+         // In a real app, throw a custom exception
+         return new MatchResult("Error", 0, new ArrayList<>(), 0, 0);
+     }
+     
+     // Execute the algorithm
+     NaiveSearch naiveSearch = new NaiveSearch();
+     return naiveSearch.search(request.getText(), request.getPattern());
+ }
+
+ // A simple DTO for the request body
+ public static class SearchRequest {
+     private String text;
+     private String pattern;
+     // Getters and Setters needed...
+     public String getText() { return text; }
+     public String getPattern() { return pattern; }
+     public void setText(String text) { this.text = text; }
+     public void setPattern(String pattern) { this.pattern = pattern; }
+ }
+}

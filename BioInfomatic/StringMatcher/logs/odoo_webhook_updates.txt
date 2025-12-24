@@ -1,0 +1,436 @@
+
+My Orgnization Details:
+    "About Hub1006": "Hub1006 is a dynamic workspace designed to inspire collaboration, creativity, and growth for entrepreneurs and professionals.",
+
+    "Vision": "To create a cosmic ecosystem where innovation, collaboration, and excellence thrive among the stars — empowering startups, enterprises, and digital professionals to grow together.",
+
+    "Floors Overview": 
+"Hub1006 features six coworking floors, each with its own purpose:
+1. Nova Nexus – Entry point where ideas collide
+2. Stellar Spark – Igniting startups to brilliance
+3. Quantum Rise – Disruptive tech & rapid growth
+4. Cosmic Flow – Collaborative workspaces in harmony
+5. Orbit Prosperity – Success in motion – excellence
+6. Pulsar Peak – High-energy leadership & executive suites",
+
+    "Orbit Prosperity Neighborhoods": 
+"1. Startup Constellation – Flexible for emerging companies
+2. Established Company Galaxy – Private offices for mature organizations
+3. Innovation Nebula – Prototype development labs
+4. Corporate Solar System – Enterprise mission spaces
+5. International Space Station – Premium global operations",
+
+    "Coliving Universe": 
+"Cosmic Co-Living Universe spans the 7th to 15th floors, offering 300+ furnished apartments with smart home integration and city views.",
+
+    "Apartment Collections": 
+"Three collections:
+Nebula Collection (7th–11th floors)
+Galaxy Series (12th–14th floors)
+Supernova Suites (15th–17th floors)
+Each designed for different lifestyles, from tranquil studios to penthouse-level residences.",
+
+    "Amenities & Facilities": 
+"Hub1006 offers:
+High-speed Wi-Fi
+Smart climate control
+Ergonomic workstations
+Café & refreshment zones
+Meeting & conference rooms
+ Printing & office supplies
+Housekeeping & maintenance
+24/7 security
+Parking spaces
+Recreation & wellness corners
+Community events",
+
+    "Programs and Events": 
+"Regular events include:
+Nova Nexus Tech Talks – Weekly
+Quantum Rise Hackathons – Monthly
+Cosmic Flow Collaborations – Ongoing
+Orbit Prosperity Demo Days – Quarterly
+Pulsar Peak Executive Forums – Monthly",
+
+"Tour Booking": 
+"Fill out the required details on the Book a Tour form on the website, and our team will reach out soon. You can also access the form directly by clicking the 'Book a Tour' button at the top right of the website."
+    "Why Choose Hub1006": 
+"Hub1006 blends innovation, comfort, and opportunity — delivering a world-class environment where startups, professionals, and enterprises thrive together.",
+
+    "Contact": 
+" Email: cosmic@j7techpark.com | legends@hub1006.com | orbit@j7techpark.com
+ Phone: +92 (51) 111-COSMIC
+ Address: J7 Emporium, B-17 Islamabad, Pakistan.",
+
+    "Social Media": 
+"Follow us on:
+@J7CosmicPark
+@Hub1006Galaxy
+@OrbitProsperity",
+
+    "Tagline": "Hub1006 - Where Legends Reside Among the Stars 
+
+
+
+
+    "Membership Plans": 
+"Hub1006 offers a range of coworking memberships designed to fit every stage of growth — from freelancers to enterprises.
+Available plans:
+1. Classic
+2. Signature
+3. Royal
+4. Presidential
+5. Elite
+Would you like me to provide further details for each membership plan?",
+
+    "Classic Plan": 
+" Classic Plan – PKR 25,000/month (30% OFF)
+Access: 8 AM – 6 PM
+Rooms: 5 hrs/month
+Print/Scan: 3 free per day (Additional Rs. 50 per page)
+Locker: Not included
+Mail: Not included
+Events: Not included
+Refreshments: Basic (Tea/Coffee)
+Support: Priority Support
+Best For: Freelancers & Students",
+
+    "Signature Plan": 
+" Signature Plan – PKR 45,000/month (40% OFF)
+ Access: 8 AM – 6 PM
+Rooms: 10 hrs/month
+Print/Scan: 5 free per day (Additional Rs. 50 per page)
+Locker: Included
+Mail: Not included
+Events: Not included
+Refreshments: Standard
+Support: Priority Support
+Best For: Professionals & Startups",
+
+    "Royal Plan": 
+" Royal Plan – PKR 75,000/month (50% OFF)
+Access: 24/7
+Rooms: Unlimited
+Print/Scan: Included
+Locker: Personalized
+Mail: Included
+Events: Included
+Refreshments: Premium
+Support: Priority Support
+Best For: Small Teams",
+
+    "Presidential Plan": 
+" Presidential Plan – PKR 100,000/month (60% OFF)
+Access: 24/7
+Rooms: Unlimited + Hosting Discounts
+Print/Scan: Premium Access
+Locker: Concierge Managed
+Mail: Included
+Events: Hosting Discounts + Invitations
+Refreshments: Premium Snacks & Beverages
+Support: Concierge Service (Admin help, booking assistance)
+Best For: Executives & Growing Companies",
+
+    "Elite Plan": 
+" Elite Plan – Custom Pricing (Personalized Package)
+Access: 24/7
+Rooms: All-inclusive
+Print/Scan: All-inclusive
+Locker: Concierge Managed
+Mail: Included
+Events: Exclusive Invitations
+Refreshments: All-inclusive
+Support: Personal Assistant
+Best For: Corporates & Enterprises"
+ 
+
+
+
+
+
+
+
+"Co-Living Cosmic Floors": 
+"Hub1006 Co-Living offers a range of themed residential floors — each blending comfort, design, and a cosmic lifestyle.
+Select a floor to explore available units:
+
+1.  Nebula Haven (6th Floor)
+2 Studios
+13 One-Bed Apartments
+12 Two-Bed Apartments
+Interior Design: Modern & Cozy
+
+2.  Celestial Vista (7th Floor)
+City Views & Balcony Access
+Premium Finishes
+Smart Home Features
+
+3.  Aurora Loft (8th Floor)
+ Artistic Interior Themes
+Creative Workspace
+Lighting Systems & Art Installations
+
+4.  Lunar Cove (9th Floor)
+Meditation-Focused Design
+Quiet Zones & Wellness Amenities
+Peaceful Color Palette
+
+5. Starlight Sanctum (10th Floor)
+Premium Studio Apartments
+Enhanced Amenities
+Luxury Finishes & Concierge Services
+
+6.  Andromeda Heights (11th Floor)
+Enhanced Living Spaces
+Professional Workspaces
+Premium Amenities & Network Zone
+
+7.  Orion (12th Floor)
+Open Concept Design
+Natural Light Optimization
+Modern Furnishings & Tech Integration
+
+8. Andromeda (13th Floor)
+Spacious 2-Bedroom Apartments
+Executive-Level Finishes
+Private Work Areas & Premium Appliances
+
+9.  Harmony (14th Floor)
+Panoramic City View
+Balanced Living Spaces
+Wellness Design & Flexible Layouts
+
+10.  Phoenix Rise (15th Floor)
+2-Bedroom Suites
+Transformation Spaces
+Executive Amenities & Concierge Services
+
+11.  Infinity Edge (16th Floor)
+Elite Penthouse Suites
+Infinite City Views
+Premium Finishes & VIP Services
+
+12.  Cosmos Crown (17th Floor)
+Prestige Living
+Crown-Level Amenities
+Exclusive Services & Legendary Status"
+
+What is Hub1006?
+Hub1006 is a modern and inspiring co-working and innovation space designed for entrepreneurs, freelancers, startups, and growing businesses. We provide a collaborative environment where creativity meets comfort — helping you focus, connect, and succeed.
+
+ How can I book a tour?
+Booking a tour is simple! You can visit our website and fill out the “Book a Tour” form, or contact our support team directly by phone or email. We’ll be happy to schedule a personalized visit at a time that suits you best.
+
+You can also message us on our social media pages — we’re always happy to assist!
+
+ What amenities do you offer?
+Hub1006 offers a full range of amenities to make your workday smooth and enjoyable, including:
+ Unlimited coffee and refreshments
+ High-speed internet
+ Ergonomic workstations
+ Printing and scanning facilities
+ Relaxation areas
+ Meeting rooms and collaboration zones
+
+ What facilities do you offer?
+Our facilities are designed to support both focus and collaboration. We provide:
+
+Private offices and shared desks
+
+Conference and event rooms
+
+Community lounge
+
+Secure parking
+
+24/7 access for members
+
+Dedicated power backup and air conditioning
+
+
+How many seats are available in Cosmic Flow?
+Cosmic Flow currently offers a limited number of available seats. Availability may vary depending on the workspace type you prefer. Please contact our team or visit our booking page to check real-time seat availability and reserve your spot.
+so there are **5** seats available and **0** seats booked in Cosmic Flow.
+Below is the list of all seats and their current status.
+here is list of available seats:
+- Open collaboration (ID: 37) (Status: Available)
+- Seat 1-Team rooms (ID: 38) (Status: Available)
+- Seat 2-Team rooms (ID: 39) (Status: Available)
+- Seat 3-Team rooms (ID: 40) (Status: Available)
+- Creative studios (ID: 14) (Status: Available)
+
+
+How many seats are available in Nova Nexus?
+Nova Nexus currently offers a limited number of available seats. Availability may vary depending on the workspace type you prefer. Please contact our team or visit our booking page to check real-time seat availability and reserve your spot.
+so there are **5** seats available and **2** seats booked in Nova Nexus.
+Below is the list of all seats and their current status.
+here is list of available seats:
+- Seat 1- Nova Networking (ID: 18) (Status: Booked)
+- Seat 2- Nova Networking (ID: 19) (Status: Booked)
+- Seat 3- Nova Networking (ID: 20) (Status: Available)
+- Seat 1-Event Space (ID: 21) (Status: Available)
+- Seat 2-Event Space (ID: 22) (Status: Available)
+- Seat 1-Cafe (ID: 23) (Status: Available)
+- Seat 2-Cafe Space (ID: 24) (Status: Available)
+
+
+How many seats are available in Orbit Prosperity?
+Orbit Prosperity currently offers a limited number of available seats. Availability may vary depending on the workspace type you prefer. Please contact our team or visit our booking page to check real-time seat availability and reserve your spot.
+so there are **8** seats available and **0** seats booked in Orbit Prosperity.
+Below is the list of all seats and their current status.
+here is list of available seats:
+- Seat 1- 5 neighborhoods (ID: 42) (Status: Available)
+- Seat 2- 5 neighborhoods (ID: 43) (Status: Available)
+- Seat 3- 5 neighborhoods (ID: 44) (Status: Available)
+- Seat 4- 5 neighborhoods (ID: 45) (Status: Available)
+- Seat 5- 5 neighborhoods (ID: 46) (Status: Available)
+- Seat 1- 100+ auditorium (ID: 47) (Status: Available)
+- Seat 1-Premium amenities (ID: 48) (Status: Available)
+- Seat 2-Premium amenities (ID: 49) (Status: Available)
+
+
+How many seats are available in Pulsar Peak?
+Pulsar Peak currently offers a limited number of available seats. Availability may vary depending on the workspace type you prefer. Please contact our team or visit our booking page to check real-time seat availability and reserve your spot.
+so there are **7** seats available and **0** seats booked in Pulsar Peak.
+Below is the list of all seats and their current status.
+here is list of available seats:
+- Seat 1-Executive suites (ID: 50) (Status: Available)
+- Seat 2-Executive suites (ID: 51) (Status: Available)
+- Seat 1-Boardrooms (ID: 52) (Status: Available)
+- Seat 1-VIP lounges (ID: 53) (Status: Available)
+- Seat 2-VIP lounges (ID: 54) (Status: Available)
+- Seat 3-VIP lounges (ID: 55) (Status: Available)
+- Seat 4-VIP lounges (ID: 56) (Status: Available)
+
+
+How many seats are available in Quantum Rise?
+Quantum Rise currently offers a limited number of available seats. Availability may vary depending on the workspace type you prefer. Please contact our team or visit our booking page to check real-time seat availability and reserve your spot.
+so there are **5** seats available and **0** seats booked in Quantum Rise.
+Below is the list of all seats and their current status.
+here is list of available seats:
+- Seat 1-Scale-up suites (ID: 32) (Status: Available)
+- Seat 2-Scale-up suites (ID: 33) (Status: Available)
+- Seat 1-Advanced labs (ID: 34) (Status: Available)
+- Seat 2-Advanced labs (ID: 35) (Status: Available)
+- Seat 1-R&D facilities (ID: 36) (Status: Available)
+
+
+How many seats are available in Stellar Spark?
+Stellar Spark currently offers a limited number of available seats. Availability may vary depending on the workspace type you prefer. Please contact our team or visit our booking page to check real-time seat availability and reserve your spot.
+so there are **7** seats available and **0** seats booked in Stellar Spark.
+Below is the list of all seats and their current status.
+here is list of available seats:
+- Seat 1-Incubation spaces (ID: 25) (Status: Available)
+- Seat 2-Executive suites (ID: 26) (Status: Available)
+- Seat 1-Hot desks (ID: 27) (Status: Available)
+- Seat 2-Hot desks (ID: 28) (Status: Available)
+- Seat 3-Hot desks (ID: 29) (Status: Available)
+- Seat 1-Mentorship rooms (ID: 30) (Status: Available)
+- Seat 2-Mentorship rooms (ID: 31) (Status: Available)
+
+
+
+
+
+The Below Details All About co-living Workplace
+
+Cosmic Co-Living Universe
+Cosmic Co-Living Universe features 320 fully furnished apartments across nine floors, designed for innovators, professionals, and families seeking a balance between work and serenity.
+
+
+Apartments Types:
+1. Studio Apartments = Size Range (sq ft)= 450 – 950,	Units per Floor= 08 , Ideal For= Digital nomads & young professionals.
+
+2. 1-Bedroom Apartments = Size Range (sq ft)= 750 – 950, Units per Floor= 10 , Ideal For= Professionals & couples.
+
+3. 2-Bedroom Apartments = Size Range (sq ft)= 1,150 – 1,450, Units per Floor= 12 , Ideal For= Executives & families.
+
+
+"Below Details About Co-Living Cosmic Floors":
+Hub1006 Co-Living offers a range of themed residential floors each blending comfort, design, and a cosmic lifestyle.
+Select a floor to explore available units:
+
+1.  Nebula Haven (6th Floor):
+    	 2 Studios
+   	 13 One-Bed Apartments
+    	 12 Two-Bed Apartments
+    	 Interior Design: Modern & Cozy.
+
+
+2. Celestial Vista (7th Floor)
+	City Views & Balcony Access
+	Premium Finishes
+	Smart Home Features
+
+3. Aurora Loft (8th Floor)
+	Artistic Interior Themes
+	Creative Workspace
+	Lighting Systems & Art Installations
+
+4. Lunar Cove (9th Floor)
+	Meditation-Focused Design
+	Quiet Zones & Wellness Amenities
+	Peaceful Color Palette
+
+5.Starlight Sanctum (10th Floor)
+	Premium Studio Apartments
+	Enhanced Amenities
+	Luxury Finishes & Concierge Services
+6. Andromeda Heights (11th Floor)
+	Enhanced Living Spaces
+	Professional Workspaces
+	Premium Amenities & Network Zone
+
+7. Orion (12th Floor)
+	Open Concept Design
+	Natural Light Optimization
+	Modern Furnishings & Tech Integration
+
+8. Andromeda (13th Floor)
+	Spacious 2-Bedroom Apartments
+	Executive-Level Finishes
+	Private Work Areas & Premium Appliances
+
+9. Harmony (14th Floor)
+	Panoramic City View
+	Balanced Living Spaces
+	Wellness Design & Flexible Layouts
+
+10. Phoenix Rise (15th Floor)
+	2-Bedroom Suites
+	Transformation Spaces
+	Executive Amenities & Concierge Services
+
+11. Infinity Edge (16th Floor)
+	Elite Penthouse Suites
+	Infinite City Views
+	Premium Finishes & VIP Services
+12. Cosmos Crown (17th Floor)
+	Prestige Living
+	Crown-Level Amenities
+	Exclusive Services & Legendary Status
+
+
+Premium Apartment Features:
+Modern Design:	
+	•	Open-plan integrated living areas
+	•	Fully equipped modern kitchens
+	•	Floor-to-ceiling windows
+	•	Smart home integration
+
+Luxury Amenities:
+	•	Premium bathrooms with spa features
+	•	Built-in storage solutions
+	•	Private balconies with city views
+	•	Individual climate control
+
+
+Fully Furnished Excellence:
+	.Move-in ready with contemporary furnishing and flexible cosmic leasing options.
+
+Supporting Mentions:
+	•	Located above co-working floors (7th–15th) within J7 Tech Park, B-17 Islamabad.
+	•	Managed under Hub 1006 Limited – Global Network.
+	•	Connected to STZA-approved smart infrastructure and innovation ecosystem.
+
+

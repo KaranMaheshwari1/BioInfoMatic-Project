@@ -1,0 +1,51 @@
+package com.bio.utils;
+
+import java.util.Random;
+
+public class GenomeDataGenerator {
+    private static final char[] BASES = {'A', 'T', 'C', 'G'};
+    private static final long FIXED_SEED = 42L; 
+    
+    // --- NEW STATIC CACHE ---
+    private static volatile String CACHED_GENOME = null;
+    // ------------------------
+
+    private static final Random RANDOM = new Random(FIXED_SEED); 
+
+    public static String generateGenome(int length, String pattern) {
+        
+        // --- FIX: Return cached genome if it exists ---
+        // We only generate once! We don't worry about the pattern injection 
+        // as long as the base sequence is identical.
+        if (CACHED_GENOME != null && CACHED_GENOME.length() == length) {
+             return CACHED_GENOME;
+        }
+        // ---------------------------------------------
+        
+        // If we reach here, we generate the sequence
+        StringBuilder genome = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            genome.append(BASES[RANDOM.nextInt(BASES.length)]);
+        }
+
+        // Inject known matches to ensure correctness check
+        String p = pattern;
+        int pLen = p.length();
+        int[] injectionPoints = {
+            1000, 
+            length / 2, 
+            length - pLen - 1000 
+        };
+
+        for (int idx : injectionPoints) {
+            if (idx >= 0 && idx + pLen <= length) {
+                genome.replace(idx, idx + pLen, p);
+            }
+        }
+        
+        // --- CACHE THE RESULT ---
+        CACHED_GENOME = genome.toString();
+        
+        return CACHED_GENOME;
+    }
+}

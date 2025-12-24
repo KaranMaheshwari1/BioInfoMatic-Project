@@ -1,0 +1,37 @@
+package com.bio.algorithm;
+
+import org.biojava.nbio.core.sequence.DNASequence;
+
+//src/main/java/com/bioinfo/algorithm/BioJavaSearch.java
+
+import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
+
+import com.bio.model.MatchResult;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class BioJavaSearch {
+
+ public MatchResult search(String text, String pattern) throws Exception {
+     
+     // 1. Convert Java String to BioJava Sequence Objects (Handles alphabet validation)
+     DNACompoundSet compoundSet = DNACompoundSet.get=instance();
+     DNASequence textSequence = new DNASequence(text, compoundSet);
+     DNASequence patternSequence = new DNASequence(pattern, compoundSet);
+
+     long startTime = System.nanoTime();
+
+     // 2. Use BioJava's search method (often highly optimized)
+     List<Integer> matchIndices = textSequence.getDnaMatches(patternSequence)
+         .stream()
+         // BioJava indices are 1-based, convert to 0-based for consistency
+         .map(match -> match.getIndex() - 1) 
+         .collect(Collectors.toList());
+
+     long endTime = System.nanoTime();
+     long executionTimeNs = endTime - startTime;
+
+     return new MatchResult("BioJava (Library)", executionTimeNs, matchIndices, text.length(), pattern.length());
+ }
+}

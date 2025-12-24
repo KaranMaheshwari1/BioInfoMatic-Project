@@ -1,0 +1,113 @@
+package com.bio.algorithm;
+
+package com.bio.algorithm;
+
+import com.bio.model.MatchResult;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class SuffixTreeSearch {
+
+    private SuffixTrieNode root;
+    private long constructionTimeNs = 0;
+    private long comparisonCount = 0;
+    private int textLength = 0;
+    private int patternLength = 0;
+    
+    /**
+     * Helper method to insert a single suffix into the tree.
+     */
+    private void insertSuffix(String text, int startIndex) {
+        SuffixTrieNode current = root;
+        
+        for (int i = startIndex; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            
+            // Check if the character is in the children map
+            if (!current.children.containsKey(ch)) {
+                current.children.put(ch, new SuffixTrieNode());
+            }
+            current = current.children.get(ch);
+            
+            // Record the original start index for every node on the path
+            current.startIndices.add(startIndex);
+        }
+    }
+    
+    /**
+     * Builds the Suffix Tree (Pre-processing Phase)
+     */
+    private void buildTree(String text) {
+        long startTime = System.nanoTime();
+        root = new SuffixTrieNode();
+        textLength = text.length();
+
+        // The simplicity comes here: we iterate over ALL suffixes and insert them
+        for (int i = 0; i < textLength; i++) {
+            insertSuffix(text, i);
+        }
+        
+        long endTime = System.nanoTime();
+        constructionTimeNs = endTime - startTime;
+    }
+
+    /**
+     * Searches the constructed Suffix Tree for the pattern (Search Phase)
+     */
+    private Set<Integer> findMatches(String pattern) {
+        SuffixTrieNode current = root;
+        patternLength = pattern.length();
+        comparisonCount = 0; // Reset comparison count for the search phase
+
+        for (int i = 0; i < patternLength; i++) {
+            comparisonCount++; // Count character comparison
+            char ch = pattern.charAt(i);
+
+            if (!current.children.containsKey(ch)) {
+                // Mismatch: pattern does not exist in the text
+                return new HashSet<>(); 
+            }
+            current = current.children.get(ch);
+        }
+        
+        // Return the set of start indices stored at the final node
+        return current.startIndices;
+    }
+
+    /**
+     * Main search method integrated with MatchResult.
+     */
+    public MatchResult search(String text, String pattern) {
+        if (text == null || pattern == null || pattern.length() == 0 || text.length() < pattern.length()) {
+             return new MatchResult("Suffix Tree Search", 0, 0, new ArrayList<>(), text.length(), pattern.length(), 0);
+        }
+        
+        // 1. Pre-processing (Build the Tree)
+        buildTree(text);
+        
+        long searchStartTime = System.nanoTime();
+        
+        // 2. Search for the pattern
+        Set<Integer> matchSet = findMatches(pattern);
+        
+        long searchEndTime = System.nanoTime();
+        
+        List<Integer> matchIndices = new ArrayList<>(matchSet);
+
+        // Total time is the sum of construction and search
+        long totalExecutionTimeNs = constructionTimeNs + (searchEndTime - searchStartTime);
+        long searchTimeNs = searchEndTime - searchStartTime;
+
+        return new MatchResult(
+            "Suffix Tree Search", 
+            totalExecutionTimeNs, 
+            constructionTimeNs, // Overhead is the construction time
+            matchIndices, 
+            textLength, 
+            patternLength, 
+            comparisonCount
+        );
+    }
+}

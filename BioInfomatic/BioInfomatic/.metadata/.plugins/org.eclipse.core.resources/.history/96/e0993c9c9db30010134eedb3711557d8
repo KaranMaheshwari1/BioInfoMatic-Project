@@ -1,0 +1,39 @@
+package com.bio.algorithm;
+
+//src/main/java/com/bioinfo/algorithm/NaiveSearch.java
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bio.model.MatchResult;
+
+public class NaiveSearch {
+
+ public MatchResult search(String text, String pattern) {
+     List<Integer> matchIndices = new ArrayList<>();
+     int N = text.length();
+     int M = pattern.length();
+     long startTime = System.nanoTime();
+
+     // Outer loop for the text
+     for (int i = 0; i <= N - M; i++) {
+         int j;
+         // Inner loop for the pattern
+         for (j = 0; j < M; j++) {
+             if (text.charAt(i + j) != pattern.charAt(j)) {
+                 break; // Mismatch found
+             }
+         }
+
+         // If pattern[0...M-1] matched
+         if (j == M) {
+             matchIndices.add(i); // Pattern found at index i
+         }
+     }
+
+     long endTime = System.nanoTime();
+     long executionTimeNs = endTime - startTime;
+
+     return new MatchResult("Naive Search", executionTimeNs, matchIndices, N, M);
+ }
+}

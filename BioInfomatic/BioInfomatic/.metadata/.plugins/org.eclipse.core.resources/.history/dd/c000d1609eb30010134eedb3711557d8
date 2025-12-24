@@ -1,0 +1,29 @@
+package com.bio.model;
+
+import java.util.List;
+
+public class MatchResult {
+    private String algorithm;
+    private long executionTimeNs;
+    private long overheadTimeNs; // New field
+    private List<Integer> matchIndices;
+    private int textLength;
+    private int patternLength;
+    private long comparisonCount; // New field
+    
+    // New constructor to handle all metrics
+    public MatchResult(String algorithm, long executionTimeNs, long overheadTimeNs, 
+                       List<Integer> matchIndices, int textLength, int patternLength, long comparisonCount) {
+        this.algorithm = algorithm;
+        this.executionTimeNs = executionTimeNs;
+        this.overheadTimeNs = overheadTimeNs;
+        this.matchIndices = matchIndices;
+        this.textLength = textLength;
+        this.patternLength = patternLength;
+        this.comparisonCount = comparisonCount;
+    }
+    
+    // Getters and Setters...
+    public long getOverheadTimeNs() { return overheadTimeNs; }
+    public long getComparisonCount() { return comparisonCount; }
+}

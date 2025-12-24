@@ -1,0 +1,5 @@
+package com.bio.config;
+
+public class CorsConfig {
+
+}

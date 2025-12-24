@@ -1,0 +1,49 @@
+package com.bio.utils;
+
+
+import java.util.Random;
+
+public class GenomeDataGenerator {
+ private static final char[] BASES = {'A', 'T', 'C', 'G'};
+ 
+ // --- FIX: Use a fixed seed for deterministic and repeatable results ---
+ private static final long FIXED_SEED = 42L; // A standard, fixed seed value
+ private static final Random RANDOM = new Random(FIXED_SEED); 
+
+ /**
+  * Generates a large DNA sequence and injects a pattern at specific indices.
+  * * IMPORTANT: Because the Random object is initialized with a FIXED_SEED, 
+  * this method will produce the exact same 10,000,000 character sequence 
+  * every time the application runs, ensuring fair benchmarking.
+  * * @param length The total length of the genome (e.g., 100,000,000).
+  * @param pattern The pattern to inject.
+  * @return The generated DNA sequence string.
+  */
+ public static String generateGenome(int length, String pattern) {
+     
+     // IMPORTANT: To ensure the randomness *within* a single application execution 
+     // is consistent across sequential and parallel calls, we rely on the 
+     // static initialization using the FIXED_SEED above.
+     
+     StringBuilder genome = new StringBuilder(length);
+     for (int i = 0; i < length; i++) {
+         genome.append(BASES[RANDOM.nextInt(BASES.length)]);
+     }
+
+     // Inject known matches to ensure correctness check
+     String p = pattern;
+     int pLen = p.length();
+     int[] injectionPoints = {
+         1000, 
+         length / 2, 
+         length - pLen - 1000 
+     };
+
+     for (int idx : injectionPoints) {
+         if (idx >= 0 && idx + pLen <= length) {
+             genome.replace(idx, idx + pLen, p);
+         }
+     }
+     return genome.toString();
+ }
+}

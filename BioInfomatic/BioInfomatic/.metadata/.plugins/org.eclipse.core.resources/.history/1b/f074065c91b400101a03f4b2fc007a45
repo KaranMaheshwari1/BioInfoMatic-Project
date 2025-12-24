@@ -1,0 +1,55 @@
+package com.bio.service;
+
+//src/main/java/com/example/bioinfo/service/NaiveSearchService.java
+
+
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+* Implements the sequential Naive String Matching Algorithm.
+* This service is thread-safe and stateless, making it suitable for use 
+* within the concurrent worker threads of the ParallelGenericSearchService.
+*/
+@Service
+public class NaiveSearchService {
+
+ /**
+  * Finds all occurrences of the pattern in the text using the Naive algorithm.
+  * * @param text The genomic sequence (or a chunk thereof).
+  * @param pattern The pattern to search for.
+  * @return A list of starting indices (0-based) where the pattern is found.
+  */
+ public List<Integer> search(String text, String pattern) {
+     // The implementation here is for exact matching, which is the necessary 
+     // sequential component for the parallel framework.
+     
+     List<Integer> matches = new ArrayList<>();
+     int N = text.length();
+     int M = pattern.length();
+
+     if (M == 0 || N < M) {
+         return matches;
+     }
+
+     // Slide the pattern over the text one by one
+     for (int i = 0; i <= N - M; i++) {
+         int j;
+         
+         // Check for match
+         for (j = 0; j < M; j++) {
+             if (text.charAt(i + j) != pattern.charAt(j)) {
+                 break; // Mismatch found
+             }
+         }
+
+         // If pattern[0...M-1] matches text[i...i+M-1]
+         if (j == M) {
+             matches.add(i); // Report the starting index
+         }
+     }
+
+     return matches;
+ }
+}

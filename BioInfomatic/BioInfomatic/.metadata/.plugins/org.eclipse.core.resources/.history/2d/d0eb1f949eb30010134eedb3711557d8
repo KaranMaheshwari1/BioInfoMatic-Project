@@ -1,0 +1,74 @@
+package com.bio.algorithm;
+
+
+import com.bio.model.MatchResult;
+import java.util.ArrayList;
+import java.util.List;
+
+public class KMPSearch {
+    
+    // NEW FIELD: Comparison counter
+    private long comparisonCount = 0;
+
+    private int[] computeLPSArray(String pattern) {
+        int[] lps = null;
+		// ... (LPS array logic remains the same)
+        // Note: We don't strictly count comparisons here, but the time is tracked in overhead.
+        return lps;
+    }
+
+    public MatchResult search(String text, String pattern) {
+        List<Integer> matchIndices = new ArrayList<>();
+        int N = text.length();
+        int M = pattern.length();
+        
+        if (M == 0 || N == 0 || M > N) {
+             // NEW: Return 0 for comparisonCount and overheadNs
+             return new MatchResult("KMP Search", 0, 0, matchIndices, N, M, 0); 
+        }
+
+        long startTime = System.nanoTime();
+
+        // Step 1: Preprocessing (Build LPS Array)
+        long preprocessStartTime = System.nanoTime();
+        int[] lps = computeLPSArray(pattern);
+        long preprocessEndTime = System.nanoTime();
+        // NEW: Calculate preprocessing overhead time
+        long overheadNs = preprocessEndTime - preprocessStartTime;
+
+        int i = 0; // index for text (T)
+        int j = 0; // index for pattern (P)
+
+        // Step 2: Searching
+        while (i < N) {
+            // NEW: Increment comparison count
+            comparisonCount++; 
+            if (pattern.charAt(j) == text.charAt(i)) {
+                i++;
+                j++;
+            }
+
+            // A match is found!
+            if (j == M) {
+                matchIndices.add(i - j);
+                j = lps[j - 1];
+            } 
+            // Mismatch after j matches
+            else if (i < N) {
+                 // The mismatch branch means we had one failed comparison (accounted for above)
+                if (j != 0) {
+                    j = lps[j - 1];
+                } else {
+                    i++;
+                }
+            }
+        }
+
+        long endTime = System.nanoTime();
+        // Total time includes preprocessing and searching
+        long executionTimeNs = endTime - startTime; 
+
+        // NEW: Return overhead time and comparison count
+        return new MatchResult("KMP Search", executionTimeNs, overheadNs, matchIndices, N, M, comparisonCount);
+    }
+}

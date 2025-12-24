@@ -1,0 +1,86 @@
+package com.bio.algorithm;
+
+
+import com.bio.model.MatchResult;
+import java.util.ArrayList;
+import java.util.List;
+
+public class KMPSearch {
+
+    /**
+     * Preprocesses the pattern to build the Longest Proper Prefix which is also a Suffix (LPS) array.
+     * The LPS array guides the pattern where to shift on a mismatch.
+     */
+    private int[] computeLPSArray(String pattern) {
+        int M = pattern.length();
+        int[] lps = new int[M];
+        int length = 0; // length of the previous longest prefix suffix
+        int i = 1;
+
+        lps[0] = 0; // lps[0] is always 0
+
+        while (i < M) {
+            if (pattern.charAt(i) == pattern.charAt(length)) {
+                length++;
+                lps[i] = length;
+                i++;
+            } else {
+                if (length != 0) {
+                    length = lps[length - 1];
+                } else {
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+        return lps;
+    }
+
+    public MatchResult search(String text, String pattern) {
+        List<Integer> matchIndices = new ArrayList<>();
+        int N = text.length();
+        int M = pattern.length();
+        
+        if (M == 0 || N == 0 || M > N) {
+             return new MatchResult("KMP Search", 0, matchIndices, N, M);
+        }
+
+        long startTime = System.nanoTime();
+
+        // Step 1: Preprocessing (Build LPS Array)
+        int[] lps = computeLPSArray(pattern);
+
+        int i = 0; // index for text (T)
+        int j = 0; // index for pattern (P)
+
+        // Step 2: Searching
+        while (i < N) {
+            if (pattern.charAt(j) == text.charAt(i)) {
+                i++;
+                j++;
+            }
+
+            // A match is found!
+            if (j == M) {
+                matchIndices.add(i - j);
+                // Shift the pattern using the LPS array
+                j = lps[j - 1];
+            } 
+            // Mismatch after j matches
+            else if (i < N && pattern.charAt(j) != text.charAt(i)) {
+                if (j != 0) {
+                    // Smart shift: don't backtrack i, just update j
+                    j = lps[j - 1];
+                } else {
+                    // Normal shift: if j=0, just move text pointer
+                    i++;
+                }
+            }
+        }
+
+        long endTime = System.nanoTime();
+        long executionTimeNs = endTime - startTime;
+
+        return new MatchResult("KMP Search", executionTimeNs, matchIndices, N, M);
+    }
+}

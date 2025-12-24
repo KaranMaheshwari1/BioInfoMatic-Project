@@ -1,0 +1,146 @@
+// src/main/java/com/bio/controller/BioinformaticsController.java
+package com.bio.controller;
+
+import com.bio.algorithm.BioJavaSearch;
+import com.bio.algorithm.BoyerMooreSearch;
+import com.bio.algorithm.KMPSearch;
+import com.bio.algorithm.NaiveSearch;
+import com.bio.algorithm.NativeJavaSearch;
+import com.bio.algorithm.SuffixTreeSearch;
+import com.bio.model.MatchRequest;
+import com.bio.model.MatchResult;
+import com.bio.service.NaiveSearchService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.Collections;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/bioinfo/match")
+@CrossOrigin(origins = "*") // Crucial for allowing React/Flutter frontend access
+public class BioinformaticsController {
+	// Inject the NaiveSearchService
+    private final NaiveSearchService naiveSearchService;
+
+    public BioinformaticsController(NaiveSearchService naiveSearchService) {
+        this.naiveSearchService = naiveSearchService;
+    }
+
+    // --- Data Transfer Object (DTO) for Request Body ---
+    // Should be in its own file (e.g., SearchRequest.java) but defined here for simplicity.
+    public static class SearchRequest {
+        private String text;
+        private String pattern;
+        
+        // Getters and Setters needed for JSON Deserialization
+        public String getText() { return text; }
+        public String getPattern() { return pattern; }
+        public void setText(String text) { this.text = text; }
+        public void setPattern(String pattern) { this.pattern = pattern; }
+    }
+    
+    // Helper method for error handling
+    private ResponseEntity<MatchResult> handleSearch(String algorithmName, SearchRequest request, SearchExecutor executor) {
+        if (request.getText() == null || request.getPattern() == null || request.getPattern().isEmpty()) {
+            return new ResponseEntity<>(
+                new MatchResult(algorithmName, 0, Collections.emptyList(), 0, 0),
+                HttpStatus.BAD_REQUEST // 400 status code
+            );
+        }
+        try {
+            MatchResult result = executor.execute(request.getText(), request.getPattern());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error running " + algorithmName + ": " + e.getMessage());
+            // Return an empty result with a server error status
+            return new ResponseEntity<>(
+                new MatchResult(algorithmName + " Error", 0, Collections.emptyList(), 0, 0),
+                HttpStatus.INTERNAL_SERVER_ERROR // 500 status code
+            );
+        }
+    }
+
+    // Functional Interface for cleaner execution handling
+    @FunctionalInterface
+    interface SearchExecutor {
+        MatchResult execute(String text, String pattern) throws Exception;
+    }
+
+    // 1. Naive Search (Mid-Term Requirement)
+    @PostMapping("/naive")
+    public ResponseEntity<MatchResult> runNaiveSearch(@RequestBody SearchRequest request) {
+        return handleSearch("Naive Search", request, (text, pattern) -> 
+            new NaiveSearch().search(text, pattern)
+        );
+    }
+    @PostMapping("/naive-10m")
+    public ResponseEntity<MatchResult> runNaive10M(@RequestBody MatchRequest request) {
+            if (request.getPattern() == null || request.getPattern().isEmpty()) {
+            return ResponseEntity.badRequest().body(new MatchResult("Pattern is required."));
+        }
+
+        try {
+            // Call the new service method that handles 10M data generation
+            MatchResult result = naiveSearchService.executeSearch(request);
+
+            double timeMs = (double) result.getExecutionTimeNs() / 1_000_000.0;
+            System.out.printf("Sequential Naive Search on 10M bases completed in %.4f ms. Matches: %d\n",
+                             timeMs, result.getMatchIndices().size());
+
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            System.err.println("Error running Sequential Naive 10M: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(new MatchResult("Sequential Naive 10M failed: " + e.getMessage()));
+        }
+    }
+
+ // 2. KMP Search (Mid-Term Requirement - NOW IMPLEMENTED)
+    @PostMapping("/kmp")
+    public ResponseEntity<MatchResult> runKMPSearch(@RequestBody SearchRequest request) {
+        // *** FIX: Replace the placeholder with the actual KMPSearch class ***
+        return handleSearch("KMP Search", request, (text, pattern) -> 
+            new KMPSearch().search(text, pattern)
+        );
+    }
+
+    // 3. Boyer-Moore Search (Final Term Goal - NOW IMPLEMENTED)
+    @PostMapping("/boyer-moore")
+    public ResponseEntity<MatchResult> runBoyerMooreSearch(@RequestBody SearchRequest request) {
+        // *** FIX: Replace the placeholder with the actual BoyerMooreSearch class ***
+        return handleSearch("Boyer-Moore Search", request, (text, pattern) -> 
+            new BoyerMooreSearch().search(text, pattern)
+        );
+    }
+
+    // 4. Native Java Search (Performance Baseline)
+    @PostMapping("/native")
+    public ResponseEntity<MatchResult> runNativeJavaSearch(@RequestBody SearchRequest request) {
+        return handleSearch("Native Java indexOf()", request, (text, pattern) -> 
+            new NativeJavaSearch().search(text, pattern)
+        );
+    }
+
+    // 5. BioJava Search (Library Integration)
+    @PostMapping("/biojava")
+    public ResponseEntity<MatchResult> runBioJavaSearch(@RequestBody SearchRequest request) {
+        return handleSearch("BioJava/Regex Search", request, (text, pattern) -> 
+            new BioJavaSearch().search(text, pattern)
+        );
+    }
+    @PostMapping("/suffix-tree") // Matches the 'suffix-tree' value in App.jsx
+    public MatchResult runSuffixTree(@RequestBody MatchRequest request) {
+        // Validation (basic check)
+        if (request.getText() == null || request.getPattern() == null) {
+             throw new IllegalArgumentException("Text and pattern must be provided.");
+        }
+
+        // Initialize and run the search
+        SuffixTreeSearch searcher = new SuffixTreeSearch();
+        
+        // The search method handles timing and comparison counting internally
+        return searcher.search(request.getText(), request.getPattern());
+    }
+}

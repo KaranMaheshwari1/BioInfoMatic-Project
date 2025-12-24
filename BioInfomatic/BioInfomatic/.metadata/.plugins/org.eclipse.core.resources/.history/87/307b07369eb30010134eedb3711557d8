@@ -1,0 +1,79 @@
+package com.bio.algorithm;
+
+
+import com.bio.model.MatchResult;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
+
+public class BoyerMooreSearch {
+
+    private static final int ALPHABET_SIZE = 256; // Standard ASCII/extended ASCII size for simplicity
+
+    /**
+     * Preprocesses the pattern to create the Bad Character Shift array.
+     * Stores the last occurrence index of each character in the pattern.
+     */
+    private int[] buildBadCharTable(String pattern) {
+        int M = pattern.length();
+        // Initialize all occurrences to -1
+        int[] badChar = new int[ALPHABET_SIZE];
+        Arrays.fill(badChar, -1);
+
+        // Fill the actual last occurrence index
+        for (int i = 0; i < M; i++) {
+            // Converts char to its ASCII value (0-255) to use as an index
+            badChar[pattern.charAt(i)] = i; 
+        }
+        return badChar;
+    }
+
+    public MatchResult search(String text, String pattern) {
+        List<Integer> matchIndices = new ArrayList<>();
+        int N = text.length();
+        int M = pattern.length();
+        
+        if (M == 0 || N == 0 || M > N) {
+            return new MatchResult("Boyer-Moore Search", 0, matchIndices, N, M);
+        }
+
+        long startTime = System.nanoTime();
+
+        // Step 1: Preprocessing (Bad Character Rule)
+        int[] badChar = buildBadCharTable(pattern);
+
+        int s = 0; // s is the shift of the pattern with respect to the text
+        
+        // Step 2: Searching
+        while (s <= (N - M)) {
+            int j = M - 1; // Start comparison from the end of the pattern
+
+            // Keep reducing index j while characters of pattern and text are matching
+            // at this shift s
+            while (j >= 0 && pattern.charAt(j) == text.charAt(s + j)) {
+                j--;
+            }
+
+            // If the pattern is present at the current shift 's'
+            if (j < 0) {
+                matchIndices.add(s);
+
+                // Shift the pattern so that the next character in text aligns with 
+                // its last occurrence in the pattern (or shift by 1 if no mismatch)
+                // We use s + M here because j = -1 (full match)
+                s += (s + M < N) ? M - badChar[text.charAt(s + M)] : 1;
+
+            } else {
+                // Character text.charAt(s + j) is the "Bad Character"
+                // Shift the pattern using the Bad Character Rule:
+                // max(1, j - last_occurrence_index_of_bad_char)
+                s += Math.max(1, j - badChar[text.charAt(s + j)]);
+            }
+        }
+
+        long endTime = System.nanoTime();
+        long executionTimeNs = endTime - startTime;
+
+        return new MatchResult("Boyer-Moore Search", executionTimeNs, matchIndices, N, M);
+    }
+}

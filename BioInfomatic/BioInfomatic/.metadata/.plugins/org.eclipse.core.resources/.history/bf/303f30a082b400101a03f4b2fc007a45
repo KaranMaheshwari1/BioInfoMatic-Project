@@ -1,0 +1,42 @@
+package com.bio.model;
+
+
+/**
+ * Data Transfer Object (DTO) used to accept the Text and Pattern
+ * from the React frontend's JSON POST request body.
+ */
+public class MatchRequest {
+
+    // These field names MUST match the keys sent in the JSON body from the frontend.
+    private String text;
+    private String pattern;
+
+    // --- Constructors ---
+    // Default constructor is required by some Jackson JSON deserializers
+    public MatchRequest() {
+    }
+
+    // Optional: All-arguments constructor
+    public MatchRequest(String text, String pattern) {
+        this.text = text;
+        this.pattern = pattern;
+    }
+
+    // --- Getters (Required by Spring/Jackson to read data) ---
+    public String getText() {
+        return text;
+    }
+
+    public String getPattern() {
+        return pattern;
+    }
+
+    // --- Setters (Required by Spring/Jackson to write data from JSON) ---
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
+}

@@ -1,0 +1,52 @@
+// src/main/java/com/bio/service/ParallelGenericSearchService.java
+
+package com.bio.service;
+
+// ... (other imports)
+import com.bio.utils.GenomeDataGenerator; // Import the updated utility
+import java.io.IOException; // Important import
+
+@Service
+public class ParallelGenericSearchService {
+
+    // ... (existing fields)
+
+    // Removed GENOME_LENGTH constant
+    // Removed TASKS_PER_THREAD constant (optional)
+    
+    // ... (existing constructor)
+    
+    // --- UPDATED executeParallelSearch method ---
+    public MatchResult executeParallelSearch(MatchRequest request) throws Exception {
+          
+        // 1. Read the Massive Genomic Data from the file
+        String pattern = request.getPattern();
+        String text = GenomeDataGenerator.readGenomeFile(); // Read the identical data
+        
+        int textLength = text.length();
+        int patternLength = pattern.length();
+        
+        final int NUM_THREADS = 4; // Use a fixed number or read from value property
+        final int NUM_TASKS = 16; // 4 threads * 4 tasks/thread
+
+        // 2. Prepare Chunks with Overlap (Master's role: Data Decomposition)
+        // ... (rest of the logic remains the same, using text, pattern, textLength, etc.)
+        // ... (The chunking logic below is correct and does not need change)
+        
+        int chunkSizeBase = textLength / NUM_TASKS;
+        int overlapSize = patternLength - 1; 
+        
+        List<Callable<Set<Integer>>> tasks = new ArrayList<>();
+        // ... (chunking loop)
+        
+        // 3. Parallel Execution and Aggregation
+        long startTime = System.nanoTime();
+        // ... (rest of the execution and aggregation logic remains the same)
+        
+        // 4. Construct Final Result
+        MatchResult result = new MatchResult();
+        // ... (result construction remains the same)
+        
+        return result;
+    }
+}

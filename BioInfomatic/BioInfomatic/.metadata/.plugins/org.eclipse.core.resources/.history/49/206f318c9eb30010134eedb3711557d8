@@ -1,0 +1,42 @@
+package com.bio.algorithm;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bio.model.MatchResult;
+
+public class NaiveSearch {
+
+    public MatchResult search(String text, String pattern) {
+        List<Integer> matchIndices = new ArrayList<>();
+        int N = text.length();
+        int M = pattern.length();
+
+        // Counter for character comparisons
+        long comparisonCount = 0;
+
+        long startTime = System.nanoTime();
+
+        for (int i = 0; i <= N - M; i++) {
+            int j;
+            for (j = 0; j < M; j++) {
+                // Increment counter on every comparison
+                comparisonCount++;
+
+                if (text.charAt(i + j) != pattern.charAt(j)) {
+                    break;
+                }
+            }
+
+            if (j == M) {
+                matchIndices.add(i);
+            }
+        }
+
+        long endTime = System.nanoTime();
+        long executionTimeNs = endTime - startTime;
+
+        // Return MatchResult with comparison count
+        return new MatchResult("Naive Search", executionTimeNs, matchIndices, N, M, comparisonCount);
+    }
+}

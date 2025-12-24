@@ -1,0 +1,43 @@
+package com.bio.algorithm;
+
+import com.bio.model.MatchResult;
+import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet; // <-- CORRECT CLASS FOR DNA COMPOUND SET
+import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
+import org.biojava.nbio.core.sequence.template.SequenceMatcher; // <-- REQUIRED FOR MATCHING
+import org.biojava.nbio.core.sequence.template.Sequence;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class BioJavaSearch {
+
+    public MatchResult search(String text, String pattern) throws Exception {
+
+        // 1. Convert Java String to BioJava Sequence Objects
+        // FIX 1: Use the correct class and method: AmbiguityDNACompoundSet.getDNACompoundSet()
+        AmbiguityDNACompoundSet compoundSet = AmbiguityDNACompoundSet.getDNACompoundSet();
+        
+        DNASequence textSequence = new DNASequence(text, compoundSet);
+        DNASequence patternSequence = new DNASequence(pattern, compoundSet);
+
+        long startTime = System.nanoTime();
+
+        // 2. Use BioJava's official sequence matching mechanism
+        // FIX 2: The method is NOT getDnaMatches(). You must use a SequenceMatcher.
+        SequenceMatcher<NucleotideCompound, DNASequence> matcher = 
+            textSequence.getMatcher(patternSequence);
+
+        // Perform the match operation and collect the results (Match objects)
+        List<Integer> matchIndices = matcher.getMatches()
+            .stream()
+            // BioJava indices are 1-based, convert to 0-based for consistency
+            .map(match -> match.getQueryMatch().getIndex() - 1)
+            .collect(Collectors.toList());
+
+        long endTime = System.nanoTime();
+        long executionTimeNs = endTime - startTime;
+
+        return new MatchResult("BioJava (Library)", executionTimeNs, matchIndices, text.length(), pattern.length());
+    }
+}

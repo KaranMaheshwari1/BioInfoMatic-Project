@@ -1,0 +1,53 @@
+package com.bio.controller;
+
+//src/main/java/com/example/bioinfo/controller/ParallelSearchController.java
+
+
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.bio.model.MatchResult;
+import com.bio.service.ParallelGenericSearchService;
+
+@RestController
+@RequestMapping("/api/bioinfo/parallel")
+public class ParallelSearchController {
+
+ private final ParallelGenericSearchService parallelService;
+
+ public ParallelSearchController(ParallelGenericSearchService parallelService) {
+     this.parallelService = parallelService;
+ }
+
+ /**
+  * Endpoint to run any specified algorithm (e.g., Naive, KMP, etc.) 
+  * in a dynamically load-balanced parallel fashion on a massive 100M sequence.
+  * @param request Contains pattern and the name of the base algorithm (e.g., "naive").
+  * @return The combined match result.
+  */
+ @PostMapping("/run-dynamic")
+ public ResponseEntity<MatchResult> runDynamicParallelSearch(@RequestBody MatchRequest request) {
+     if (request.getPattern() == null || request.getPattern().isEmpty()) {
+         return ResponseEntity.badRequest().body(new MatchResult("Pattern is required."));
+     }
+     
+     try {
+         // The service generates the 100M data, executes, and aggregates
+         MatchResult result = parallelService.executeParallelSearch(request);
+         
+         // Log performance metrics for the console
+         double timeMs = (double) result.getExecutionTimeNs() / 1_000_000.0;
+         System.out.printf("Dynamic Parallel Search (%s) on 100M bases completed in %.4f ms. Matches: %d\n", 
+                           result.getAlgorithm(), timeMs, result.getMatchIndices().size());
+         
+         return ResponseEntity.ok(result);
+         
+     } catch (Exception e) {
+         e.printStackTrace();
+         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                              .body(new MatchResult("Parallel execution failed: " + e.getMessage()));
+     }
+ }
+}

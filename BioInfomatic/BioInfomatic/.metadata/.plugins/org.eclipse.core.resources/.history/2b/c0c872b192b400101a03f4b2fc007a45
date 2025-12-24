@@ -1,0 +1,38 @@
+package com.bio.utils;
+
+
+import java.util.Random;
+
+public class GenomeDataGenerator {
+ private static final char[] BASES = {'A', 'T', 'C', 'G'};
+ private static final Random RANDOM = new Random();
+
+ /**
+  * Generates a large DNA sequence and injects a pattern at specific indices.
+  * @param length The total length of the genome (e.g., 100,000,000).
+  * @param pattern The pattern to inject.
+  * @return The generated DNA sequence string.
+  */
+ public static String generateGenome(int length, String pattern) {
+     StringBuilder genome = new StringBuilder(length);
+     for (int i = 0; i < length; i++) {
+         genome.append(BASES[RANDOM.nextInt(BASES.length)]);
+     }
+
+     // Inject known matches to ensure correctness check
+     String p = pattern;
+     int pLen = p.length();
+     int[] injectionPoints = {
+         1000, 
+         length / 2, // 50,000,000
+         length - pLen - 1000 // Near the end
+     };
+
+     for (int idx : injectionPoints) {
+         if (idx >= 0 && idx + pLen <= length) {
+             genome.replace(idx, idx + pLen, p);
+         }
+     }
+     return genome.toString();
+ }
+}

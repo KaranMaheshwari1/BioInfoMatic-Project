@@ -1,0 +1,81 @@
+// src/main/java/com/bio/utils/GenomeDataGenerator.java
+
+package com.bio.utils;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Random;
+
+public class GenomeDataGenerator {
+    private static final char[] BASES = {'A', 'T', 'C', 'G'};
+    
+    // --- Configuration ---
+    private static final long FIXED_SEED = 42L; 
+    private static final String FILE_NAME = "10M_genome.txt";
+    private static final int GENOME_LENGTH = 10_000_000;
+    // ---------------------
+
+    // NOTE: The static Random object is REMOVED to be created locally in generateAndSaveFile
+    // to ensure a fresh, fixed-seed generator is used for the ENTIRE file generation.
+
+
+    /**
+     * Generates a 10M DNA sequence using a fixed seed, injects a pattern, 
+     * and saves the result to a text file for persistent, identical benchmarking.
+     * @param pattern The pattern to inject.
+     * @return The absolute path to the generated file.
+     * @throws IOException If file writing fails.
+     */
+    public static Path generateAndSaveFile(String pattern) throws IOException {
+        Path filePath = Path.of(FILE_NAME);
+        
+        // 1. Initialize a new Random object with the fixed seed for deterministic output
+        Random random = new Random(FIXED_SEED); 
+        
+        System.out.println("Generating 10M base sequence with fixed seed: " + FIXED_SEED);
+
+        // 2. Generate the base sequence
+        StringBuilder genome = new StringBuilder(GENOME_LENGTH);
+        for (int i = 0; i < GENOME_LENGTH; i++) {
+            // Use the local, fixed-seed Random object
+            genome.append(BASES[random.nextInt(BASES.length)]);
+        }
+
+        // 3. Inject known matches (for correctness checks)
+        String p = pattern;
+        int pLen = p.length();
+        int[] injectionPoints = {
+            1000, 
+            GENOME_LENGTH / 2, 
+            GENOME_LENGTH - pLen - 1000 
+        };
+
+        for (int idx : injectionPoints) {
+            if (idx >= 0 && idx + pLen <= GENOME_LENGTH) {
+                genome.replace(idx, idx + pLen, p);
+            }
+        }
+        
+        // 4. Write the massive string to the file
+        Files.writeString(filePath, genome.toString());
+        
+        System.out.println("10M genome successfully saved to: " + filePath.toAbsolutePath());
+        
+        return filePath;
+    }
+
+    /**
+     * Simple file reader for search services.
+     */
+    public static String readGenomeFile() throws IOException {
+        Path filePath = Path.of(FILE_NAME);
+        if (!Files.exists(filePath)) {
+            throw new IOException("Genome data file not found at: " + filePath.toAbsolutePath() + 
+                                  ". Please run the generator endpoint first.");
+        }
+        return Files.readString(filePath);
+    }
+
+    // REMOVE the old public static String generateGenome(int length, String pattern) method!
+}

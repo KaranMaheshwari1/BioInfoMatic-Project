@@ -1,0 +1,5 @@
+package com.bio.utils;
+
+public class GenomeDataGenerator {
+
+}
